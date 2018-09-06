@@ -5,65 +5,43 @@ import Book from './Book';
 
 class Shelf extends Component{
     static propTypes = {
-        books: PropTypes.array.isRequired
+        books: PropTypes.array.isRequired,
+        onBookUpdate: PropTypes.func.isRequired
     }
-
+    
     render(){
-        const {books, updateShelf} = this.props;
+        const {books, onBookUpdate} = this.props;
+        const shelf = [{title:'Currently Reading',item:'currentlyReading'},{title:'Want to Read',item:'wantToRead'},{title:'Read',item:'read'}]
+        
         return(
             <div className="list-books">
                 <div className="list-books-title">
                 <h1>MyReads</h1>
                 </div>
+                
                 <div className="list-books-content">
-                <div>
-                    <div className="bookshelf">
-                        <h2 className="bookshelf-title">Currently Reading</h2>
-                        <div className="bookshelf-books">
-                            <ol className="books-grid">
-                                {
-                                    books&&
-                                    books.map((book,index)=>(
-                                        book.shelf==="currentlyReading"&&
-                                        <Book key={index} book={book} updateShelf={updateShelf}/>
-                                    ))
-                                }
-                            </ol>
+                {
+                    shelf.map((shelf) =>(
+                        <div className="bookshelf">
+                            <h2 className="bookshelf-title">{shelf.title}</h2>
+                            <div className="bookshelf-books">
+                                <ol className="books-grid">
+                                    {                             
+                                        books.filter((b) => b.shelf === shelf.item).map((book,index)=>(
+                                            <Book key={index} book={book} onBookUpdate={onBookUpdate}/>
+                                        ))
+                                    }
+                                </ol>
+                            </div>
                         </div>
-                    </div>
-                    <div className="bookshelf">
-                        <h2 className="bookshelf-title">Want to Read</h2>
-                        <div className="bookshelf-books">
-                            <ol className="books-grid">
-                                {
-                                    books&&
-                                    books.map((book,index)=>(
-                                        book.shelf==="wantToRead"&&
-                                        <Book key={index} book={book} updateShelf={updateShelf}/>
-                                    ))
-                                }
-                            </ol>
-                        </div>
-                    </div>
-                    <div className="bookshelf">
-                        <h2 className="bookshelf-title">Read</h2>
-                        <div className="bookshelf-books">
-                            <ol className="books-grid">
-                                {
-                                    books&&
-                                    books.map((book,index)=>(
-                                        book.shelf==="read"&&
-                                        <Book key={index} book={book} updateShelf={updateShelf}/>
-                                    ))
-                                }
-                            </ol>
-                        </div>
-                    </div>
+                    ))
+                }
                 </div>
-                </div>
+                
                 <div className="open-search">
-                <Link to='/search' onClick={() => this.setState({ showSearchPage: true })}>Add a book</Link>
+                    <Link to='/search' onClick={() => this.setState({ showSearchPage: true })}>Add a book</Link>
                 </div>
+            
             </div>
         );
     }
